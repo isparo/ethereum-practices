@@ -6,6 +6,7 @@ import (
 	"fmt"
 	"log"
 	"math/big"
+	"time"
 
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
@@ -37,9 +38,13 @@ func main() {
 
 	fmt.Println("contract is loaded")
 
-	readFromContract(instance)
-	writeToContract(instance, client)
-	readFromContract(instance)
+	for i := 0; i < 100; i++ {
+		readFromContract(instance)
+		writeToContract(instance, client)
+		readFromContract(instance)
+
+		time.Sleep(100 * time.Second)
+	}
 
 }
 
@@ -88,7 +93,7 @@ func writeToContract(contractIns *simplestorage.Simplestorage, client *ethclient
 	}
 
 	auth.Nonce = big.NewInt(int64(nonce))
-	auth.Value = big.NewInt(0)     // in wei
+	auth.Value = big.NewInt(0)     // in wei 0 cost
 	auth.GasLimit = uint64(300000) // in units
 	auth.GasPrice = gasPrice
 
