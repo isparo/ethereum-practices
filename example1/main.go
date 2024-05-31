@@ -74,6 +74,9 @@ func writeToContract(contractIns *simplestorage.Simplestorage, client *ethclient
 
 	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
 
+	fmt.Println("public key based on private key: ", publicKey)
+	fmt.Println("public key adrees: ", fromAddress)
+
 	nonce, err := client.PendingNonceAt(context.Background(), fromAddress)
 	if err != nil {
 		log.Fatal(err)
