@@ -16,10 +16,10 @@ import (
 	"github.com/josue/ethereum-practices/example3_dropbox_v2/dropboxv2"
 )
 
-const contratAddress string = "0x26e189c5Bf5E03930c7b739fD833cB48986EFD5f"
+const contratAddress string = "0xd19E0a116DC4181aBc633919c00EAde8D180E3FB"
 const privateAccountAddress string = "56b0c19ed9894b37b620a402963e12af5b34f62d8859510c85e1044be30b353f"
 
-const senderAccount string = "d6b481840f32ed9d708b9815ace09e7a3a09fe86da78cdde48c634e51e351653"
+const senderAccount string = "87eec659deb0233d6aa6c4f11455612844a3437ecadf10db812f33279626fb2c"
 
 func main() {
 	/* firmar el mensaje
@@ -37,8 +37,6 @@ func main() {
 	}
 
 	fmt.Println("Conectado a la red Ethereum")
-	fmt.Println("Dirección del contrato: %s\n", address)
-	fmt.Println("Client: %s\n", client)
 
 	instance, err := dropboxv2.NewDropboxv2(address, client)
 	if err != nil {
@@ -63,8 +61,6 @@ func signMessage() (*big.Int, *big.Int, uint8, error) {
 	if err != nil {
 		log.Fatal(err)
 	}
-
-	// fileHash, fileSize, fileType, fileName, fileDescription := buildData()
 	fileHash, _, _, _, _ := buildData()
 
 	// Prefix the message hash according to the Ethereum standard
@@ -78,11 +74,6 @@ func signMessage() (*big.Int, *big.Int, uint8, error) {
 
 	fmt.Println("Signature:", hexutil.Encode(signature))
 
-	/*signature, err = hex.DecodeString(hexutil.Encode(signature)[2:])
-	if err != nil {
-		log.Fatalf("Failed to decode signature: %v", err)
-	}*/
-
 	r := new(big.Int).SetBytes(signature[:32])
 	s := new(big.Int).SetBytes(signature[32:64])
 	v := uint8(signature[64]) // + 27 // ajustar v a 27 o 28
@@ -91,19 +82,19 @@ func signMessage() (*big.Int, *big.Int, uint8, error) {
 		v += 27
 	}
 
-	fmt.Println("signature r: ", r.Text(16))
-	fmt.Println("signature s: ", s.Text(16))
-	fmt.Println("signature v: ", v)
-	//fmt.Println("signature: ", messageHash.Hex())
+	// fmt.Println("signature r: ", r.Text(16))
+	// fmt.Println("signature s: ", s.Text(16))
+	// fmt.Println("signature v: ", v)
+	// //fmt.Println("signature: ", messageHash.Hex())
 
 	return r, s, v, nil
 }
 
 func buildData() (string, *big.Int, string, string, string) {
-	var fileHash string = "67ea261420Dea06E2f5F77C204128E20fc40f02aafe44"
+	var fileHash string = "67ea261420Dea06E2f5F77C204128E20fc40f02aafe14"
 	var fileSize *big.Int = big.NewInt(1024)
 	var fileType string = "text/plain"
-	var fileName string = "documenttest.txt"
+	var fileName string = "documenttest1.txt"
 	var fileDescription string = "este es un ejemplo de prueba"
 
 	return fileHash,
