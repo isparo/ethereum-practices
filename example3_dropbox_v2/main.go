@@ -19,7 +19,7 @@ import (
 const contratAddress string = "0xd19E0a116DC4181aBc633919c00EAde8D180E3FB"
 const privateAccountAddress string = "56b0c19ed9894b37b620a402963e12af5b34f62d8859510c85e1044be30b353f"
 
-const senderAccount string = "87eec659deb0233d6aa6c4f11455612844a3437ecadf10db812f33279626fb2c"
+const senderAccount string = "fd5df95c7826401a983cb33e0904a96b200b3bbb6aa5481f4f252f3ffbf8f271"
 
 func main() {
 	/* firmar el mensaje
@@ -53,6 +53,12 @@ func main() {
 	GetAllfiles(instance)
 
 	upladFile(instance, client)
+
+	fmt.Println("_________________________________________________")
+	fmt.Println("_________________________________________________")
+	fmt.Println("_________________________________________________")
+
+	GetFilesForAddress(instance)
 
 }
 
@@ -116,7 +122,7 @@ func GetAllfiles(contractIns *dropboxv2.Dropboxv2) {
 	}
 
 	for _, v := range result {
-		fmt.Println(v.FileName)
+		fmt.Println(v)
 	}
 }
 
@@ -197,4 +203,36 @@ func upladFile(contractIns *dropboxv2.Dropboxv2, client *ethclient.Client) {
 
 	fmt.Println("transaction: ", tx.Cost())
 	fmt.Println("transaction: ", tx.Hash())
+}
+
+func GetFilesForAddress(contractIns *dropboxv2.Dropboxv2) {
+	callOpts := &bind.CallOpts{
+		Context: context.Background(),
+	}
+
+	result, err := contractIns.ListFiles(callOpts)
+	if err != nil {
+		log.Fatal(err)
+		return
+	}
+
+	privateKey, err := crypto.HexToECDSA(senderAccount)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	publicKey := privateKey.Public()
+	publicKeyECDSA, ok := publicKey.(*ecdsa.PublicKey)
+	if !ok {
+		log.Fatal("error casting public key to ECDSA")
+		return
+	}
+
+	fromAddress := crypto.PubkeyToAddress(*publicKeyECDSA)
+
+	for _, v := range result {
+		if v.Uploader.String() == fromAddress.String() {
+			fmt.Println(v)
+		}
+	}
 }
