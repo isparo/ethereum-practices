@@ -16,10 +16,12 @@ import (
 	"github.com/josue/ethereum-practices/example3_dropbox_v2/dropboxv2"
 )
 
-const contratAddress string = "0xd19E0a116DC4181aBc633919c00EAde8D180E3FB"
+const contratAddress string = "0x8989Bb5444999D6107f9f102B65208b66E3EDF0e"
 const privateAccountAddress string = "56b0c19ed9894b37b620a402963e12af5b34f62d8859510c85e1044be30b353f"
 
 const senderAccount string = "fd5df95c7826401a983cb33e0904a96b200b3bbb6aa5481f4f252f3ffbf8f271"
+
+// const senderAccount string = "d6b481840f32ed9d708b9815ace09e7a3a09fe86da78cdde48c634e51e351653"
 
 func main() {
 	/* firmar el mensaje
@@ -52,7 +54,7 @@ func main() {
 
 	GetAllfiles(instance)
 
-	upladFile(instance, client)
+	// upladFile(instance, client)
 
 	fmt.Println("_________________________________________________")
 	fmt.Println("_________________________________________________")
@@ -87,11 +89,6 @@ func signMessage() (*big.Int, *big.Int, uint8, error) {
 	if v < 27 {
 		v += 27
 	}
-
-	// fmt.Println("signature r: ", r.Text(16))
-	// fmt.Println("signature s: ", s.Text(16))
-	// fmt.Println("signature v: ", v)
-	// //fmt.Println("signature: ", messageHash.Hex())
 
 	return r, s, v, nil
 }
@@ -191,8 +188,13 @@ func upladFile(contractIns *dropboxv2.Dropboxv2, client *ethclient.Client) {
 	var s32 [32]byte
 	copy(s32[:], sBytes)
 
-	fmt.Printf("Valor en bytes32: %x\n", r32)
-	fmt.Printf("Valor en bytes32: %x\n", s32)
+	fmt.Printf("Valor R en bytes32: %x\n", r32)
+	fmt.Printf("Valor R en bytes32: %v\n", r32)
+
+	fmt.Printf("Valor S en bytes32: %x\n", s32)
+	fmt.Printf("Valor S en bytes32: %v\n", s32)
+
+	fmt.Printf("Valor V en uitn8: %v\n", v)
 
 	tx, err := contractIns.UploadFile(auth, fileHash, fileSize, fileType, fileName, fileDescription, v, r32, s32)
 
